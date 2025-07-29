@@ -44,11 +44,11 @@ SECTIONS
  * between APU and RPU. This is special shared memory to store firmware
  * text/data.
  */
-.resource_table_metadata @RSC_TABLE@ : {
+.resource_table_metadata RSC_TABLE : {
 	KEEP(*(.resource_table_metadata))
 } > psu_ddr_S_AXI_BASEADDR
 
-.text  @RSC_TABLE@ + 0x100 : {
+.text  RSC_TABLE + 0x100 : {
    *(.text)
    *(.text.*)
    *(.gnu.linkonce.t.*)
@@ -300,7 +300,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    __undef_stack = .;
 } > psu_r5_tcm_ram_0_S_AXI_BASEADDR
 
-.resource_table  @RSC_TABLE@ + 0x200 : {
+.resource_table  RSC_TABLE + 0x200 : {
 	. = ALIGN(4);
 	*(.resource_table)
 }

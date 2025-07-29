@@ -14,6 +14,7 @@
 #include <metal/sys.h>
 #include <metal/irq.h>
 #include "platform_info.h"
+#include "rsc_table.h"
 
 /*
  * A circular buffer for libmetal log. Need locks if ported to MT world.
@@ -53,7 +54,7 @@ static void rsc_trace_logger(enum metal_log_level level,
 
 	/* prefix "cnt L6 ": record count and log level */
 	len = sprintf(msg, "%u L%u ", circ.c_cnt, level);
-	if (len < 0 || len >= sizeof(msg))
+	if (len >= sizeof(msg))
 		len = 0;
 	circ.c_cnt++;
 
@@ -73,7 +74,7 @@ static void rsc_trace_logger(enum metal_log_level level,
 int init_system(void)
 {
 	int ret;
-	const struct metal_init_params metal_param = METAL_INIT_DEFAULTS;
+	struct metal_init_params metal_param = METAL_INIT_DEFAULTS;
 
 	/*
 	 * Ensure resource table resource is set up before any attempts
