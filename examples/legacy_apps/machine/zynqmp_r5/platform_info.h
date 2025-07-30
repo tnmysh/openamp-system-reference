@@ -13,6 +13,8 @@
 #include <openamp/virtio.h>
 #include <openamp/rpmsg.h>
 
+#include <xparameters.h>
+
 #include "platform_info_common.h"
 
 #if defined __cplusplus
@@ -43,12 +45,13 @@ extern "C" {
 
 #else
 
+#include "xreg_cortexr5.h"
 #ifndef IPI_IRQ_VECT_ID
-#define IPI_IRQ_VECT_ID     XPAR_XIPIPSU_0_INT_ID
+#define IPI_IRQ_VECT_ID     65
 #endif /* !IPI_IRQ_VECT_ID */
 
 #ifndef POLL_BASE_ADDR
-#define POLL_BASE_ADDR      XPAR_XIPIPSU_0_BASE_ADDRESS
+#define POLL_BASE_ADDR      0xFF33100
 #endif /* !POLL_BASE_ADDR */
 
 #ifndef IPI_CHN_BITMASK

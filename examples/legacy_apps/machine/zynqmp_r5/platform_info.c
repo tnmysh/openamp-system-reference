@@ -150,13 +150,6 @@ platform_create_proc(int proc_index, int rsc_index)
 	return &rproc_inst;
 }
 
-void system_generic_suspend(void)
-{
-#ifndef RPMSG_NO_IPI
-	asm volatile("wfi");
-#endif /* RPMSG_NO_IPI */
-}
-
 int platform_init(int argc, char *argv[], void **platform)
 {
 	unsigned long proc_id = 0;
