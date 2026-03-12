@@ -15,12 +15,23 @@ _FIQ_STACK_SIZE = DEFINED(_FIQ_STACK_SIZE) ? _FIQ_STACK_SIZE : 1024;
 _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 /* Define Memories in the system */
-/* TCM size is set to 2*0x20000 for R5 in lockstep mode */
+
+/*
+ * Though the TCM address space can be contiguous, they should be used in 64KB
+ * chunks, as each 64KB chunk is mapped to a different power-domain.
+ */
 MEMORY
 {
-   psu_ddr_S_AXI_BASEADDR : ORIGIN = 0x3ED00000, LENGTH = 0x00040000
+   /* address space in DDR to store firmware elf sections */
+   psu_ddr_S_AXI_BASEADDR : ORIGIN = 0x9800000, LENGTH = 0x00060000
+
+   /* On-chip SRAM address space to store firmware elf sections */
    psu_ocm_ram_1_S_AXI_BASEADDR : ORIGIN = 0xFFFF0000, LENGTH = 0x10000
+
+   /* ATCM0 address space */
    psu_r5_tcm_ram_0_S_AXI_BASEADDR : ORIGIN = 0x00000, LENGTH = 0x10000
+
+   /* BTCM0 address space */
    psu_r5_tcm_ram_1_S_AXI_BASEADDR : ORIGIN = 0x20000, LENGTH = 0x10000
 }
 
@@ -275,7 +286,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . += _HEAP_SIZE;
    _heap_end = .;
    HeapLimit = .;
-} > psu_r5_tcm_ram_0_S_AXI_BASEADDR
+} > psu_ddr_S_AXI_BASEADDR
 
 .stack (NOLOAD) : {
    . = ALIGN(16);
