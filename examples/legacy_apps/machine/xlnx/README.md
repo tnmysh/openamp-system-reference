@@ -1,23 +1,48 @@
 # Steps to generate inputs for AMD-Xilinx RPU Firmware Demos
 
-Dependencies:
-1. Lopper : https://github.com/devicetree-org/lopper.git
-2. System Device Tree generated from design : https://docs.amd.com/r/en-US/ug1647-porting-embeddedsw-components/Generating-a-System-Device-Tree-Using-SDTGen
+Below is sample run for SOM KV260 platform
 
-Below is sample run for Versal Gen 1 platform
-## Generate OpenAMP RPU Device Tree
+## Pick up Domain YAMLs
 
+```sh
+git clone https://github.com/Xilinx/meta-xilinx.git -b rel-v2026.1
+export OPENAMP_OVERLAY_YAML=$PWD/meta-xilinx/meta-xilinx-standalone-sdt/conf/domainyaml/zynqmp-openamp-overlay.yaml
+export BASE_YAML=$PWD/meta-xilinx/meta-xilinx-standalone-sdt/conf/domainyaml/zynqmp-multidomain-base.yaml
+```
+
+## Pick up System Device Tree
+
+```sh
+wget https://edf.amd.com/sswreleases/rel-v2026.1/sdt/2026.1/2026.1_0609_1_06092108/external/k26-smk-kv-sdt/k26-smk-kv-sdt_2026.1_0609_1_06092108.tar.gz
+tar xvf k26-smk-kv-sdt_2026.1_0609_1_06092108.tar.gz
+export SDT=$PWD/k26-smk-kv-sdt_2026.1_0609_1_06092108/system-top.dts
+
+```
+
+## Set up Lopper
+
+```sh
+git clone https://github.com/devicetree-org/lopper.git -b master
+
+cd lopper
+git checkout d12bd4e28388d193512a3e573b7baad69783984c -b system_ref_demo
+cd -
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r lopper/requirements.txt
+pip3 install lopper
+
+export LOPPER_PY=$PWD/lopper/lopper.py
+```
+
+## Apply Domain YAML to System Device Tree
 SDT is the System Device Tree generated from design
+
 ```sh
 export LOPPER_DTC_FLAGS="-b 0 -@"
-
-python3 lopper.py -f --enhanced \
-  -x '*.yaml' \
-  -i $YAML $SDT yaml_applied.dts
-
-python3 lopper.py -f --enhanced \
-  yaml_applied.dts rpu.dts \
-  -- gen_domain_dts psu_cortexr5_0   --openamp_no_header
+python3 $LOPPER_PY -f --enhanced   -x '*.yaml' -i $BASE_YAML -i $OPENAMP_OVERLAY_YAML $SDT rpu.dts
+export RPU_DTS=$PWD/rpu.dts
 ```
 The above Device Tree "rpu.dts" will be used for configuration of the app's interrupts, shared memory and linker script.
 
@@ -25,14 +50,8 @@ The above Device Tree "rpu.dts" will be used for configuration of the app's inte
 
 ```sh
 export LOPPER_DTC_FLAGS="-b 0 -@"
-export CONFIG_DTFILE=rpu.dts
-
-cd openamp-system-reference/examples/legacy_apps/machine/zynqmp_r5
-python3 lopper.py -O -f -v --enhanced  --permissive \
-  -O . ${CONFIG_DTFILE} -- openamp --openamp_header_only \
-  --openamp_output_filename=amd_platform_info.h \
-  --openamp_remote=psv_cortexr5_0
-cd -
+python3 $LOPPER_PY --enhanced  --permissive  -O . ${RPU_DTS} -- openamp --openamp_header_only \
+ --openamp_output_filename=amd_platform_info.h --openamp_remote=psu_cortexr5_0
 ```
 The output amd_platform_info.h needs to be in the location denoted above of "openamp-system-reference/examples/legacy_apps/machine/zynqmp_r5" BEFORE
 cmake configure step.
@@ -41,8 +60,30 @@ cmake configure step.
 
 ```sh
 export LOPPER_DTC_FLAGS="-b 0 -@"
-export CONFIG_DTFILE=rpu.dts
-python3 lopper.py -O ${S} rpu.dts \
-  -- baremetallinker_xlnx psv_cortexr5_0 <output location> openamp
+python3 $LOPPER_PY -O . $RPU_DTS -- baremetallinker_xlnx psu_cortexr5_0 . openamp
 ```
 The RPU Application Linker config object needs to be pointed to with cmake variable LINKER_METADATA_FILE at cmake configure step.
+
+## Generate Linux Device Tree with OpenAMP Nodes
+
+Generate the OpenAMP-processed System Device Tree for the APU, then prune it to the Linux domain. This uses `rpu.dts`, which already contains the domain and OpenAMP YAML content applied above.
+
+```sh
+export LOPPER_DTC_FLAGS="-b 0 -@"
+export APU_PROCESSOR=psu_cortexa53_0
+export LINUX_OPENAMP_OUTPUT=$PWD/linux-openamp
+export LOPPER_ROOT=$(dirname "$LOPPER_PY")
+mkdir -p "$LINUX_OPENAMP_OUTPUT"
+
+python3 "$LOPPER_PY" -O "$LINUX_OPENAMP_OUTPUT" -f --enhanced \
+ "$RPU_DTS" "$LINUX_OPENAMP_OUTPUT/$APU_PROCESSOR-openamp.dts" \
+ -- openamp "$APU_PROCESSOR" linux_dt
+
+python3 "$LOPPER_PY" -O "$LINUX_OPENAMP_OUTPUT" -f --enhanced \
+ -i "$LOPPER_ROOT/lopper/lops/lop-a53-imux.dts" \
+ "$LINUX_OPENAMP_OUTPUT/$APU_PROCESSOR-openamp.dts" \
+ "$LINUX_OPENAMP_OUTPUT/cortexa53-linux-openamp.dts" \
+ -- gen_domain_dts "$APU_PROCESSOR" linux_dt
+```
+
+The generated Linux Device Tree with the OpenAMP remoteproc and reserved-memory nodes is `linux-openamp/cortexa53-linux-openamp.dts`.
