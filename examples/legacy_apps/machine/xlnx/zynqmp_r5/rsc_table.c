@@ -28,17 +28,19 @@
 #define VIRTIO_ID_RPMSG_             7
 
 #define NUM_VRINGS                  0x02
-#define VRING_ALIGN                 0x1000
+#define VRING_ALIGN                 64
 #ifndef RING_TX
 #define RING_TX                     FW_RSC_U32_ADDR_ANY
 #endif /* !RING_TX */
 #ifndef RING_RX
 #define RING_RX                     FW_RSC_U32_ADDR_ANY
 #endif /* RING_RX */
-#define VRING_SIZE                  256
+#define VRING_SIZE                  64
 
 #define NUM_TABLE_ENTRIES           2
 #define RSC_TRACE_SZ		    4096
+
+#define RPMSG_BUF_ALIGN		    64
 
 static struct remote_resource_table *initial_resources;
 static char rsc_trace_buf[RSC_TRACE_SZ];
@@ -58,14 +60,25 @@ struct remote_resource_table __resource resources = {
 
 	/* Virtio device entry */
 	.rpmsg_vdev = {
-		RSC_VDEV, VIRTIO_ID_RPMSG_, 31, RPMSG_VDEV_DFEATURES, 0, 0, 0,
+		RSC_VDEV, VIRTIO_ID_RPMSG_, 31, RPMSG_VDEV_DFEATURES, 0,
+		/* vdev config space len */
+		sizeof(struct rpmsg_virtio_config), 0,
 		NUM_VRINGS, {0, 0},
 	},
 
 	/* Vring rsc entry - part of vdev rsc entry */
 	{RING_TX, VRING_ALIGN, VRING_SIZE, 1, 0},
 	{RING_RX, VRING_ALIGN, VRING_SIZE, 2, 0},
-
+	/* vdev config space */
+	.vdev_config = {
+		.version = 1,
+		.reserved = 0,
+		.size = (uint16_t)(sizeof(struct rpmsg_virtio_config) - sizeof(bool)),
+		.alignment = RPMSG_BUF_ALIGN,
+		.reserved1 = 0,
+		.h2r_buf_size = metal_align_up(4096, RPMSG_BUF_ALIGN), /* host to remote, i.e. tx for host */
+		.r2h_buf_size = metal_align_up(4096, RPMSG_BUF_ALIGN), /* remote to host, i.e. rx for host */
+	},
 	/* trace buffer for logs, accessible via debugfs */
 	.rsc_trace = {
 		.type =		RSC_TRACE,
