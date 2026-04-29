@@ -21,8 +21,9 @@
 
 #define RSC_TBL_XLNX_MAGIC	((uint32_t)'x' << 24 | (uint32_t)'a' << 16 | \
 				 (uint32_t)'m' << 8 | (uint32_t)'p')
- 
-#define RPMSG_VDEV_DFEATURES        (1 << VIRTIO_RPMSG_F_NS)
+
+#define RPMSG_VDEV_DFEATURES        (1 << VIRTIO_RPMSG_F_NS | \
+				     1 << VIRTIO_RPMSG_F_BUFSZ)
 
 /* VirtIO rpmsg device id */
 #define VIRTIO_ID_RPMSG_             7
