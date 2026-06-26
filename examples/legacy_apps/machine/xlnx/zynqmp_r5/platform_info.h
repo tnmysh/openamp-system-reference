@@ -25,18 +25,6 @@
 extern "C" {
 #endif
 
-/*
- * If BSP is generated using Vitis or Yocto then header file
- * already generates interupt id with the offset.
- * If either of above tools are not used then have to use correct offset to
- * configure interrupts correctly with freertos BSP.
- */
-/* Cortex R5 memory attributes */
-#define DEVICE_SHARED       0x00000001U /* device, shareable */
-#define DEVICE_NONSHARED    0x00000010U /* device, non shareable */
-#define NORM_NSHARED_NCACHE 0x00000008U /* Non cacheable  non shareable */
-#define NORM_SHARED_NCACHE  0x0000000CU /* Non cacheable shareable */
-
 #include "xreg_cortexr5.h"
 
 #ifdef RPMSG_NO_IPI
