@@ -350,7 +350,6 @@ static int xlnx_machine_init(void)
 static void xlnx_machine_cleanup(void)
 {
 	metal_finish();
-	free_resource_table();
 
 	Xil_DCacheDisable();
 	Xil_ICacheDisable();
@@ -414,8 +413,6 @@ platform_create_rpmsg_vdev(void *platform, unsigned int vdev_index,
 	void *shbuf;
 	struct metal_io_region *shbuf_io;
 	int ret;
-
-	restore_initial_rsc_table();
 
 	rpmsg_vdev = metal_allocate_memory(sizeof(*rpmsg_vdev));
 	if (!rpmsg_vdev)

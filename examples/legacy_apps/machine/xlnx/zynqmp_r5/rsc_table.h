@@ -47,8 +47,6 @@ struct remote_resource_table_metadata {
 
 char *get_rsc_trace_info(uint32_t *len);
 void *get_resource_table (int rsc_id, int *len);
-void free_resource_table (void);
-void restore_initial_rsc_table (void);
 
 #if defined __cplusplus
 }

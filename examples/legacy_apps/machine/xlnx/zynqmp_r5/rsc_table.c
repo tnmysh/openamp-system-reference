@@ -40,7 +40,6 @@
 #define NUM_TABLE_ENTRIES           2
 #define RSC_TRACE_SZ		    4096
 
-static struct remote_resource_table *initial_resources;
 static char rsc_trace_buf[RSC_TRACE_SZ];
 
 struct remote_resource_table __resource resources = {
@@ -94,23 +93,6 @@ void *get_resource_table (int rsc_id, int *len)
 {
 	(void) rsc_id;
 	*len = sizeof(resources);
-	/* make copy of resources to restore later */
-	if (!initial_resources) {
-		initial_resources = (struct remote_resource_table *)malloc(*len);
-		memcpy(initial_resources, &resources, *len);
-	}
-
 	return &resources;
 }
 
-void free_resource_table (void)
-{
-	if (initial_resources)
-		free(initial_resources);
-}
-
-void restore_initial_rsc_table (void)
-{
-	if (initial_resources)
-		memcpy(&resources, initial_resources, sizeof(resources));
-}
