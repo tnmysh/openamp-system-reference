@@ -7,8 +7,6 @@
 
 message("Building for AMD-Xilinx Demos")
 
-cmake_minimum_required(VERSION 3.24)
-
 enable_language(C ASM )
 
 set_property (GLOBAL PROPERTY OPENAMP_APP_NAME "${OPENAMP_APP_NAME}")
@@ -38,6 +36,8 @@ else()
 endif()
 
 if (_vitis_build)
+
+  cmake_minimum_required(VERSION 3.24)
 
   message("OpenAMP: OPENAMP_APP_NAME: ${OPENAMP_APP_NAME}")
 
