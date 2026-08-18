@@ -46,7 +46,7 @@
   modprobe rpmsg_ctrl
 
   # Run Matrix multiplication application on host processor
-  mat_mul_demo
+  rpmsg_matrix_multiply_demo
 
   # unload rpmsg_ctrl driver
   modprobe -r rpmsg_ctrl

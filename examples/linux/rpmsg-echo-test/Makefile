@@ -1,5 +1,5 @@
 
-APP = echo_test
+APP = rpmsg_echo_test
 APP_OBJS = echo_test.o ../common/common.o
 
 # Add any other object files to this list below

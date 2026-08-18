@@ -1,5 +1,5 @@
 
-APP = proxy_app
+APP = rpmsg_proxy_app
 APP_OBJS = proxy_app.o ../common/common.o
 
 # Add any other object files to this list below

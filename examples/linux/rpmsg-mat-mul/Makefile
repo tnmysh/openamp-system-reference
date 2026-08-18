@@ -1,5 +1,5 @@
 
-APP = mat_mul_demo
+APP = rpmsg_matrix_multiply_demo
 APP_OBJS = mat_mul_demo.o ../common/common.o
 
 # Add any other object files to this list below

@@ -1,4 +1,4 @@
-# Demo: echo_test
+# Demo: echo test
 
   This demo uses the Linux kernel rpmsg framework to send various size of data buffer to remote
   processor and validates integrity of received buffer from remote processor.
@@ -42,7 +42,7 @@
   modprobe rpmsg_ctrl
 
   # Run echo_test application on host processor
-  echo_test
+  rpmsg_echo_test
 
   # unload rpmsg_ctrl driver
   modprobe -r rpmsg_ctrl

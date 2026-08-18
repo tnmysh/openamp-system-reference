@@ -1,4 +1,4 @@
-# Demo: proxy_app
+# Demo: proxy app
 
   This app demonstrates two functionality
   1) Use of host processor's file system by remote processor
@@ -72,7 +72,7 @@
   modprobe rpmsg_ctrl
 
   # Run proxy application.
-  proxy_app
+  rpmsg_proxy_app
 
   # unload rpmsg_ctrl driver
   modprobe -r rpmsg_ctrl
