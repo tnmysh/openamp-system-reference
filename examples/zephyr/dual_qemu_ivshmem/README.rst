@@ -49,6 +49,9 @@ Preparing IVSHMEM server before doing anything:
 
       # n = number of vectors
       sudo ivshmem-server -n 2
+
+   .. code-block:: console
+
       *** Example code, do not use in production ***
 
 #. Appropriately set ownership of ``/dev/shm/ivshmem`` and
@@ -106,7 +109,6 @@ in the ``RIGHT ORDER``, that is it, first the host instance followed by remote i
 go to the host instance terminal, you should see something like this:
 
    .. code-block:: console
-      :caption: Zephyr uart
 
       *** Booting Zephyr OS build v3.4.0-rc2-91-gbf0f58d69816 ***
       Hello qemu_cortex_a53 - Host Side, the communication over RPMsg is ready to use!
@@ -126,9 +128,16 @@ on console you may see something like this:
 Then go back to the host side terminal window, and issue the custom shell command
 ``rpmsg_ivshmem send`` and you should see how to use that:
 
+**Command**
+
    .. code-block:: console
 
-      uart:~$ rpmsg_ivshmem send
+      rpmsg_ivshmem send
+
+**Output**
+
+   .. code-block:: console
+
       send: wrong parameter count
       send - Usage: rpmsg_ivshmem send <string> <number of messages>
 
@@ -137,9 +146,16 @@ this command will send the data over RPMsg-IVSHMEM backend and the remote side
 will reply back echoing the sent string, on the host terminal this should take
 an output similar like the shown below:
 
+**Command**
+
    .. code-block:: console
 
-      uart:~$ rpmsg_ivshmem send "RPMsg over IVSHMEM" 10
+      rpmsg_ivshmem send "RPMsg over IVSHMEM" 10
+
+**Output**
+
+   .. code-block:: console
+
       Remote side echoed the string back:
       [ RPMsg over IVSHMEM ]
       at message number 1
@@ -183,13 +199,14 @@ an output similar like the shown below:
 On the remote side terminal window is possible also to check the messages
 arriving from host:
 
+**Output**
+
    .. code-block:: console
 
       *** Booting Zephyr OS build v3.4.0-rc2-91-gbf0f58d69816 ***
       Hello qemu_cortex_a53 - Remote Side, the communication over RPMsg is ready to use!
 
-
-      uart:~$ Host side sent a string:
+      Host side sent a string:
       [ RPMsg over IVSHMEM ]
       Now echoing it back!
 
@@ -234,11 +251,17 @@ This sample supports huge message number in order to do stress testing, somethin
 this command is blocking and have a 5 second timeout, returning if something goes wrong,
 for example shutdown the remote side unexpectedly:
 
+**Command**
+
    .. code-block:: console
 
-      uart:~$ rpmsg_ivshmem send "RPMsg over IVSHMEM" 10
+      rpmsg_ivshmem send "RPMsg over IVSHMEM" 10
+
+**Output**
+
+   .. code-block:: console
+
       Remote side response timed out!
-      uart:~$
 
 Known limitation:
 *****************
