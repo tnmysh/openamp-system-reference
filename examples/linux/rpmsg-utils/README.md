@@ -7,6 +7,7 @@ automatically create endpoint devices as remoteproc devices are booted.
 An example of udev-rule that automatically exposes the APPS_RIVA_CTRL channel
 to user space as the pronto core comes up:
 
+```
 ACTION=="add", SUBSYSTEM=="rpmsg", \
 	       KERNEL=="rpmsg_ctrl[0-9]*", \
 	       ATTRS{rpmsg_name}=="pronto", \
@@ -22,9 +23,10 @@ SUBSYSTEM=="rpmsg", KERNEL=="rpmsg[0-9]*", \
 		    ATTR{name}=="?*", \
 		    ATTRS{rpmsg_name}=="?*", \
 		    SYMLINK+="rpmsg/$attr{rpmsg_name}/$attr{name}"
+```
 
 eptdestroy
-====
+==========
 "rpmsg_destroy_ept" implements RPMSG_DESTROY_EPT_IOCTL to destroy an endpoint created by the RPMSG_CREATE_EPT_IOCTL.
 
 ping
