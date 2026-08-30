@@ -25,7 +25,7 @@
 
   Assume all the binaries are board specific.
 
-  ```
+  ```shell
   # Specify remote processor firmware to be loaded.
   echo image_echo_test > /sys/class/remoteproc/remoteproc0/firmware
 

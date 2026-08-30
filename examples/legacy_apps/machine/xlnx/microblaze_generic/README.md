@@ -35,16 +35,16 @@ with RPMSG_NO_IPI flag.
         include (cross-generic-gcc)
     ```
 
-  * Compile the libmetal library:
+* Compile the libmetal library:
 
-    ```
-        $ mkdir -p build-libmetal
-        $ cd build-libmetal
-        $ BSP="/path/to/your_MicroBlaze_design_BSP/dir"
-        $ cmake <libmetal_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file> \
-                -DCMAKE_LIBRARY_PATH=$BSP/lib
-        $ make VERBOSE=1 DESTDIR=<libmetal_install> install
-    ```
+```shell
+mkdir -p build-libmetal
+cd build-libmetal
+BSP="/path/to/your_MicroBlaze_design_BSP/dir"
+cmake <libmetal_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file> \
+      -DCMAKE_LIBRARY_PATH=$BSP/lib
+make VERBOSE=1 DESTDIR=<libmetal_install> install
+```
 
 * build the OpenAMP library on your host as follows:
   * Create your own cmake toolchain file to compile openamp for your generic
@@ -76,16 +76,16 @@ with RPMSG_NO_IPI flag.
 
 * Compile the OpenAMP library:
 
-    ```
-    $ mkdir -p build-openamp
-    $ cd build-openamp
-    $ BSP="/path/to/your_MicroBlaze_design_BSP/dir"
+```shell
+mkdir -p build-openamp
+cd build-openamp
+BSP="/path/to/your_MicroBlaze_design_BSP/dir"
 
-    $ cmake <openamp_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file> \
-        -DCMAKE_INCLUDE_PATH="$LIBMETAL/include;$BSP/include" \
-        -DCMAKE_LIBRARY_PATH="$LIBMETAL/lib/;BSP/lib"  -DWITH_APPS=on
-    $ make VERBOSE=1 DESTDIR=$(pwd) install
-    ```
+cmake <openamp_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file> \
+  -DCMAKE_INCLUDE_PATH="$LIBMETAL/include;$BSP/include" \
+  -DCMAKE_LIBRARY_PATH="$LIBMETAL/lib/;BSP/lib"  -DWITH_APPS=on
+make VERBOSE=1 DESTDIR=$(pwd) install
+```
 
 The OpenAMP library will be built in `build/usr/local/lib` directory,
 headers will be built in `build/usr/local/include` directory, and the

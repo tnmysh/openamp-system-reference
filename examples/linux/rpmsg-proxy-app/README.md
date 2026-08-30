@@ -58,7 +58,7 @@
 
   Assume all the binaries are zcu102 board specific.
 
-  ```
+  ```shell
   # Specify remote processor firmware to be loaded.
   echo image_rpc_demo > /sys/class/remoteproc/remoteproc0/firmware
 
