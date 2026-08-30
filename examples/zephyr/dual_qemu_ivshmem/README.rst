@@ -48,18 +48,18 @@ Preparing IVSHMEM server before doing anything:
    .. code-block:: console
 
       # n = number of vectors
-      $ sudo ivshmem-server -n 2
-      $ *** Example code, do not use in production ***
+      sudo ivshmem-server -n 2
+      *** Example code, do not use in production ***
 
 #. Appropriately set ownership of ``/dev/shm/ivshmem`` and
    ``/tmp/ivshmem_socket`` for your deployment scenario. For instance:
 
    .. code-block:: console
 
-      $ sudo chgrp $USER /dev/shm/ivshmem
-      $ sudo chmod 060 /dev/shm/ivshmem
-      $ sudo chgrp $USER /tmp/ivshmem_socket
-      $ sudo chmod 060 /tmp/ivshmem_socket
+      sudo chgrp $USER /dev/shm/ivshmem
+      sudo chmod 060 /dev/shm/ivshmem
+      sudo chgrp $USER /tmp/ivshmem_socket
+      sudo chmod 060 /tmp/ivshmem_socket
 
 Building and Running
 ********************
@@ -68,15 +68,15 @@ open a terminal and then type:
 
    .. code-block:: console
 
-      $ cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/host
-      $ west build -pauto -bqemu_cortex_a53
+      cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/host
+      west build -pauto -bqemu_cortex_a53
 
 For the remote side, open another terminal window and then type:
 
    .. code-block:: console
 
-      $ cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/remote
-      $ west build -pauto -bqemu_cortex_a53
+      cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/remote
+      west build -pauto -bqemu_cortex_a53
 
 * Note: Warnings that appear are from ivshmem-shell subsystem and can be ignored.
 
@@ -89,15 +89,15 @@ For example to run host instance:
 
    .. code-block:: console
 
-      $ cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/host
-      $ west build -t run
+      cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/host
+      west build -t run
 
 For the remote instance, just go to the remote side directory in another terminal:
 
    .. code-block:: console
 
-      $ cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/remote
-      $ west build -t run
+      cd path/to/this-repo/examples/zephyr/dual_qemu_ivshmem/remote
+      west build -t run
 
 Expected output:
 ****************
@@ -106,8 +106,9 @@ in the ``RIGHT ORDER``, that is it, first the host instance followed by remote i
 go to the host instance terminal, you should see something like this:
 
    .. code-block:: console
+      :caption: Zephyr uart
 
-      uart:~$ *** Booting Zephyr OS build v3.4.0-rc2-91-gbf0f58d69816 ***
+      *** Booting Zephyr OS build v3.4.0-rc2-91-gbf0f58d69816 ***
       Hello qemu_cortex_a53 - Host Side, the communication over RPMsg is ready to use!
 
 If nothing appears, make sure you are running the remote instance after this one, because
